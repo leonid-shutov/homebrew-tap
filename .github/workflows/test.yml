@@ -1,0 +1,22 @@
+name: test
+
+on:
+  push:
+    paths: ['Formula/**']
+  schedule:
+    - cron: '17 6 * * 1' # brew's node will move to 27; catch the ABI break before a user does
+  workflow_dispatch:
+
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - if: runner.os == 'Linux'
+        run: echo /home/linuxbrew/.linuxbrew/bin >> "$GITHUB_PATH"
+      # a fully qualified name taps on demand and trusts just this formula
+      - run: brew install --verbose leonid-shutov/tap/tuigram
+      - run: brew test --verbose leonid-shutov/tap/tuigram
