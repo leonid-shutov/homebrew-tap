@@ -14,13 +14,13 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      # tapping makes brew probe git credential helpers and call the GitHub API unauthenticated,
+      # which is slow and flaked out with "Broken pipe" on the Linux runner
+      HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - if: runner.os == 'Linux'
         run: echo /home/linuxbrew/.linuxbrew/bin >> "$GITHUB_PATH"
-      - run: brew --version
-      # trust explicitly rather than relying on a fully qualified install to do it: that is only
-      # non-interactive from Homebrew 6.1, and the prompt has nothing to read on a runner
-      - run: brew tap leonid-shutov/tap
-      - run: brew trust --formula leonid-shutov/tap/tuigram
+      # a fully qualified name taps on demand and trusts just this formula
       - run: brew install --verbose leonid-shutov/tap/tuigram
       - run: brew test --verbose leonid-shutov/tap/tuigram
