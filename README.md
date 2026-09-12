@@ -1,6 +1,6 @@
 # homebrew-tap
 
-Homebrew formulae for my terminal apps.
+Homebrew formulae for my software.
 
 ```sh
 brew install leonid-shutov/tap/tuigram
