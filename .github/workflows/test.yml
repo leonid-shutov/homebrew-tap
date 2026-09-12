@@ -14,10 +14,6 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    env:
-      # tapping makes brew probe git credential helpers and call the GitHub API unauthenticated,
-      # which is slow and flaked out with "Broken pipe" on the Linux runner
-      HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - if: runner.os == 'Linux'
         run: echo /home/linuxbrew/.linuxbrew/bin >> "$GITHUB_PATH"
