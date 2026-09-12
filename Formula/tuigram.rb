@@ -7,20 +7,25 @@ class Tuigram < Formula
   sha256 "4dd0b3306690cf9d0075888cd09c1fb93106874878f0e149d510cd290cee74c9"
   license "MIT"
 
+  # opentui's prebuilt libopentui.dylib has no header padding, so Homebrew cannot rewrite its
+  # `@rpath/libopentui.dylib` ID into an absolute one -- and does not need to: node:ffi dlopens
+  # the file by absolute path, and nothing links against it.
+  preserve_rpath
+
   depends_on "node"
 
   def install
-    # Two of Homebrew's default npm flags have to go:
-    #   --ignore-scripts skips better-sqlite3's install script (@mtcute/node's session storage),
-    #     leaving no better_sqlite3.node and a client that dies on first login;
-    #   --min-release-age=1 refuses a version published less than a day ago, which is exactly
-    #     what CI bumps this formula to.
-    # Dropping --build-from-source lets prebuild-install fetch the prebuilt addon (2s instead of
-    # 80s of compiling); it falls back to node-gyp on its own if a prebuilt is ever missing.
+    # better-sqlite3 (@mtcute/node's session storage) unpacks a native addon from its install
+    # script, so scripts have to run and npm's allow-list has to name it: with --ignore-scripts,
+    # or a user whose npm config is strict, there is no better_sqlite3.node and the client dies on
+    # first login. --min-release-age=1 refuses a version published less than a day ago, which is
+    # exactly what CI bumps this formula to. Dropping --build-from-source lets prebuild-install
+    # fetch the prebuilt addon (2s rather than 80s of compiling); it falls back to node-gyp on its
+    # own if a prebuilt is ever missing.
     args = std_npm_args(ignore_scripts: false).reject do |arg|
       arg.include?("min-release-age") || arg.include?("build-from-source")
     end
-    system "npm", "install", *args
+    system "npm", "install", "--allow-scripts=better-sqlite3", *args
 
     # npm leaves `#!/usr/bin/env node`, so tuigram would run under whichever node is first on
     # PATH -- a version manager's node 22 crashes it. It needs >= 26.4 for node:ffi, and
