@@ -3,8 +3,8 @@ class Tuigram < Formula
 
   desc "Terminal UI client for Telegram"
   homepage "https://github.com/leonid-shutov/tuigram"
-  url "https://registry.npmjs.org/tuigram/-/tuigram-1.0.0.tgz"
-  sha256 "4dd0b3306690cf9d0075888cd09c1fb93106874878f0e149d510cd290cee74c9"
+  url "https://registry.npmjs.org/tuigram/-/tuigram-1.1.0.tgz"
+  sha256 ""
   license "MIT"
 
   # opentui's prebuilt libopentui.dylib has no header padding, so Homebrew cannot rewrite its
