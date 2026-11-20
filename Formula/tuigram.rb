@@ -3,7 +3,7 @@ class Tuigram < Formula
 
   desc "Terminal UI client for Telegram"
   homepage "https://github.com/leonid-shutov/tuigram"
-  url "https://registry.npmjs.org/tuigram/-/tuigram-1.6.1.tgz"
+  url "https://registry.npmjs.org/tuigram/-/tuigram-1.7.0.tgz"
   sha256 ""
   license "MIT"
 
